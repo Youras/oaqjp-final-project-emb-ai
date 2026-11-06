@@ -15,15 +15,31 @@ def emotion_detector(text_to_analyze):
 
     formatted_output = {}
 
-    for item in formatted_response['emotionPredictions']:
-        emotion_dict = item['emotion']
-        for label, score in emotion_dict.items():
-            formatted_output[label] = score
-            if score > max_score:
-                max_score = score
-                max_label = label
+    if response.status_code == 200:
+        for item in formatted_response['emotionPredictions']:
+            emotion_dict = item['emotion']
+            for label, score in emotion_dict.items():
+                formatted_output[label] = score
+                if score > max_score:
+                    max_score = score
+                    max_label = label
 
-    
-    formatted_output["dominant_emotion"] = max_label
-    
+        formatted_output["dominant_emotion"] = max_label
+
+    elif response.status_code == 400:
+        formatted_output["anger"] = None
+        formatted_output["disgust"] = None
+        formatted_output["fear"] = None
+        formatted_output["joy"] = None
+        formatted_output["sadness"] = None        
+        formatted_output["dominant_emotion"] = None
+
+    else :
+        formatted_output["anger"] = None
+        formatted_output["disgust"] = None
+        formatted_output["fear"] = None
+        formatted_output["joy"] = None
+        formatted_output["sadness"] = None        
+        formatted_output["dominant_emotion"] = None
+
     return formatted_output

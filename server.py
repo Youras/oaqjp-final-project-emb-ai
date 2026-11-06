@@ -15,16 +15,20 @@ def application():
     text_to_analyze = request.args.get("textToAnalyze")
     resp = emotion_detector(text_to_analyze)
 
-    msg = f"For the given statement, the system response is "
-    counter = 0
-    for label, score in resp.items():
-        if counter == 0:
-            msg += label + f": {score}"
-        elif label == "dominant_emotion":
-            msg += f". The dominant emotion is {score}."
-        else:  
-            msg += ", " + label + f": {score}"
-        counter += 1
+    if resp["dominant_emotion"] is None:
+        msg = "Invalid text! Please try again!"
+
+    else:
+        msg = f"For the given statement, the system response is "
+        counter = 0
+        for label, score in resp.items():
+            if counter == 0:
+                msg += label + f": {score}"
+            elif label == "dominant_emotion":
+                msg += f". The dominant emotion is {score}."
+            else:  
+                msg += ", " + label + f": {score}"
+            counter += 1
     
     return msg
 
